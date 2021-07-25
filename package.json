@@ -1,0 +1,57 @@
+{
+  "name": "wongafix",
+  "version": "1.0.0",
+  "description": "Wongafix backend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prestart": "npm run -s build",
+    "start": "node dist/index.js",
+    "clean": "rimraf dist",
+    "build": "npm run clean && mkdir -p dist && babel src -s -D -d dist"
+  },
+  "author": "Benjamin Adeniyi",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^3.6.3",
+    "mongoose": "^5.11.13",
+    "node-schedule": "^2.0.0",
+    "nodemailer": "^6.6.3",
+    "okra-js": "^1.0.6",
+    "smslive247api": "^2.0.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.2.3",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-jest": "^23.6.0",
+    "faker": "^4.1.0",
+    "jest": "^23.6.0",
+    "regenerator-runtime": "^0.13.1",
+    "rimraf": "^2.6.3"
+  },
+  "jest": {
+    "verbose": true,
+    "testRegex": ".spec.js"
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/env",
+        {
+          "targets": {
+            "node": "14.8.0"
+          }
+        }
+      ]
+    ]
+  }
+}
+
