@@ -8,8 +8,7 @@
     "prestart": "npm run -s build",
     "start": "node dist/index.js",
     "clean": "rimraf dist",
-    "build": "npm run clean && mkdir -p dist && babel src -s -D -d dist",
-    "rimraf": "./node_modules/rimraf/bin.js"
+    "build": "npm run clean && mkdir -p dist && babel src -s -D -d dist"
   },
   "author": "Benjamin Adeniyi",
   "license": "ISC",
