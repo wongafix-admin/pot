@@ -19,6 +19,8 @@ var cors = require('cors')
 const app = express();
 app.use(bodyParser.json());
 
+const port = 9090;
+
 //Middleware
 app.use(express.urlencoded({ extended: true}));
 app.use(express.json());
@@ -204,4 +206,5 @@ function balanceController (req, res) {
 }
 
 
-app.listen(9090, () => console.log(`Listening on port 9090`));
+
+app.listen(9090, () => console.log(`Listening on `+process.env.PORT || port));
