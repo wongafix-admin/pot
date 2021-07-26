@@ -29,7 +29,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var cors = require('cors');
 
 const app = (0, _express.default)();
-app.use(_bodyParser.default.json()); //Middleware
+app.use(_bodyParser.default.json());
+const port = 9090; //Middleware
 
 app.use(_express.default.urlencoded({
   extended: true
@@ -173,5 +174,5 @@ function balanceController(req, res) {
   }) => res.set(headers).status(statusCode).send(data)).catch(e => res.status(500).end());
 }
 
-app.listen(9090, () => console.log(`Listening on port 9090`));
+app.listen(9090, () => console.log(`Listening on port 9090` + process.env.PORT || 9090));
 //# sourceMappingURL=index.js.map

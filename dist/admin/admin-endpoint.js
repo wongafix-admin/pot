@@ -128,6 +128,7 @@ function makeAdminEndpointHandler({
           data: JSON.stringify(result)
         };
       } else {
+        console.log("Admin cendpoint alled");
         const admin = (0, _admin.default)(adminInfo);
         const result = await adminQuery.add(admin);
         return {

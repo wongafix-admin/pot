@@ -55,6 +55,7 @@ function makeAdminQuery({
     adminId,
     ...admin
   }) {
+    console.log("Admin called");
     const db = await database;
 
     if (adminId) {

@@ -17,6 +17,7 @@ export default function makeAdminQuery({database}){
     });
 
     async function getAdmin ({ max = 100, before, after } = {}) {
+      
       const db = await database;
       const query = {}
       if (before || after) {

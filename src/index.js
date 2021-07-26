@@ -207,4 +207,4 @@ function balanceController (req, res) {
 
 
 
-app.listen(process.env.PORT, () => console.log(`Listening on `+process.env.PORT));
+app.listen(process.env.PORT, () => console.log(`Listening on port 9090`+process.env.PORT || 9090));
