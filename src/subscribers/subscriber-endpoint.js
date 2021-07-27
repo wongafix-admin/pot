@@ -18,6 +18,9 @@ export default function makeSubscribersEndpointHandler({subscribersQuery}){
             case 'PUT':
                 return updateSubscribers(httpRequest)
       
+            case 'DELETE':
+                return  deleteSubscriber(httpRequest)
+
             default:
               return makeHttpError({
                 statusCode: 405,
@@ -48,7 +51,6 @@ export default function makeSubscribersEndpointHandler({subscribersQuery}){
 
       }
       else if (customer_id !== undefined ){
-        console.log("idcustomer id called: "+customer_id);
         const result = await subscribersQuery.findByCustomerId({ customer_id })
 
         return {
@@ -61,7 +63,6 @@ export default function makeSubscribersEndpointHandler({subscribersQuery}){
 
       }
       else if (id !== undefined ){
-        console.log("Id called: "+id);
         const result = await subscribersQuery.findById({ id })
 
         return {
@@ -160,6 +161,7 @@ export default function makeSubscribersEndpointHandler({subscribersQuery}){
         }
     }
 
+    
 
     async function updateSubscribers (httpRequest) {
         console.log("Subscribers update endpoint");
@@ -206,4 +208,33 @@ export default function makeSubscribersEndpointHandler({subscribersQuery}){
         }
     }
 
+    async function deleteSubscriber (httpRequest) {
+      //const { customer_id } = httpRequest.pathParams || {}
+      const { customer_id } = httpRequest.queryParams || {}
+      try {
+        const result = await subscribersQuery.deleteByCustomerId({ customer_id })
+  
+        return {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          statusCode: 200,
+          data: JSON.stringify(result)
+        }
+      }
+      catch (e){
+        return makeHttpError({
+          errorMessage: e.message,
+          statusCode:
+            e instanceof UniqueConstraintError
+              ? 409
+              : e instanceof InvalidPropertyError ||
+                e instanceof RequiredParameterError
+                ? 400
+                : 500
+        })
+  
+      }
+      
+    }
 }

@@ -98,11 +98,11 @@ export default function makeAccountQuery({database}){
         
     }
 
-  async function findById ({ accountId }) {
+  async function findById ({ id }) {
     const db = await database
     const found = await db
       .collection('Account')
-      .findOne({ _id: db.makeId(accountId) })
+      .findOne({ _id: db.makeId(id) })
     if (found) {
       return documentToAccount(found)
     }

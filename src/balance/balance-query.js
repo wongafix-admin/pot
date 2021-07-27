@@ -7,9 +7,8 @@ export default function makeBalanceQuery({database}){
         findByCustomerId,
         findById,
         getBalance,
-        remove,
-        deleteById,
-        //replace,
+        //remove,
+        deleteByCustomerId,
         update
     });
 
@@ -105,11 +104,11 @@ export default function makeBalanceQuery({database}){
         
     }
 
-  async function findById ({ balanceId }) {
+  async function findById ({ id }) {
     const db = await database
     const found = await db
       .collection('Balance')
-      .findOne({ _id: db.makeId(balanceId) })
+      .findOne({ _id: db.makeId(id) })
     if (found) {
       return documentToBalance(found)
     }
@@ -138,36 +137,18 @@ export default function makeBalanceQuery({database}){
     .toArray()).map(documentToBalance)
   }
 
-  async function remove ({ balanceId, ...balance }) {
-    const db = await database
-    if (balanceId) {
-        balance._id = db.makeId(balanceId)
-    }
 
-    const { result } = await db.collection('Balance').deleteMany(balance)
-    return result.n
+
+  async function deleteByCustomerId ({ customer_id }) {
+    const db = await database
+
+    const { result } = await db.collection('Balance').deleteMany({"customer_id": customer_id})
+    return {
+      success: result.n
+    }
+    
   }
 
-  async function deleteById ({ id }) {
-    console.log("Balance query id "+id);
-    const db = await database
-    id = db.makeId(id);
-
-    const { result } = await db.collection('Balance').deleteMany({_id: id})
-    //return result.n
-    if (result) {
-      return {
-        status: "success",
-        message: "Deleted successfully"
-      }
-    }
-    else {
-      return {
-        status: "error",
-        message: "Deleted error"
-      }
-    }
-  }
 
   function documentToBalance ({ _id: id, ...doc }) {
     return makeBalance({ id, ...doc })

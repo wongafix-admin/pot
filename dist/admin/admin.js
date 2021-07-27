@@ -16,6 +16,7 @@ var _upperFirst = _interopRequireDefault(require("../helpers/upper-first"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function makeAdmin(adminInfo = (0, _requiredParam.default)('adminInfo')) {
+  console.log("admin nmakeAdmin");
   const validAdmin = validate(adminInfo);
   const normalAdmin = normalize(validAdmin);
   return Object.freeze(normalAdmin);

@@ -39,6 +39,7 @@ function makeDeal(dealInfo = (0, _requiredParam.default)('dealInfo')) {
     othernames,
     ...otherInfo
   }) {
+    console.log("deal normalize");
     return { ...otherInfo,
       surname: (0, _upperFirst.default)(surname),
       othernames: (0, _upperFirst.default)(othernames)

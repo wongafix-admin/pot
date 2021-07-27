@@ -18,6 +18,9 @@ export default function makeClientEndpointHandler({clientQuery}){
             case 'PUT':
               return updateClient(httpRequest)
 
+            case 'DELETE':
+              return deleteClient(httpRequest)
+
             default:
               return makeHttpError({
                 statusCode: 405,
@@ -159,5 +162,37 @@ export default function makeClientEndpointHandler({clientQuery}){
       })
     }
   }
+
+  async function deleteClient (httpRequest) {
+    //const { customer_id } = httpRequest.pathParams || {}
+    const { customer_id } = httpRequest.queryParams || {}
+    
+    try {
+      const result = await clientQuery.deleteByCustomerId({ customer_id })
+
+      return {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        statusCode: 200,
+        data: JSON.stringify(result)
+      }
+    }
+    catch (e){
+      return makeHttpError({
+        errorMessage: e.message,
+        statusCode:
+          e instanceof UniqueConstraintError
+            ? 409
+            : e instanceof InvalidPropertyError ||
+              e instanceof RequiredParameterError
+              ? 400
+              : 500
+      })
+
+    }
+    
+  }
+
 
 }

@@ -10,7 +10,7 @@ export default function makeSubscribersQuery ({database}){
         findByPhone,
         findByCustomerId,
         getSubscribers, 
-        remove,
+        deleteByCustomerId,
         update
     });
 
@@ -170,11 +170,11 @@ export default function makeSubscribersQuery ({database}){
     }
 
 
-    async function findById ({ subscribersId }) {
+    async function findById ({ id }) {
         const db = await database
         const found = await db
           .collection('Subscribers')
-          .findOne({ _id: subscribersId })
+          .findOne({ _id: id })
         if (found) {
           return documentToSubscribers(found)
         }
@@ -199,14 +199,12 @@ export default function makeSubscribersQuery ({database}){
         .collection('Subscribers')
         .findOne({ okra_customer_id: customer_id })
       if (found) {
-        console.log("found");
-        console.log(found);
         return documentToSubscribers(found)
       }
       return null
     }
 
-    async function remove ({ subscribersId, ...subscribers}) {
+    /*async function remove ({ subscribersId, ...subscribers}) {
       const db = await database
       if (subscribersId) {
           subscribers._id = db.makeId(subscribersId)
@@ -214,6 +212,16 @@ export default function makeSubscribersQuery ({database}){
 
       const { result } = await db.collection('Subscribers').deleteMany(subscribers)
       return result.n
+    }*/
+
+    async function deleteByCustomerId ({ customer_id }) {
+      const db = await database
+  
+      const { result } = await db.collection('Subscribers').deleteMany({"customer_id": customer_id})
+      return {
+        success: result.n
+      }
+      
     }
 
     function documentToSubscribers ({ _id: id, ...doc }) {

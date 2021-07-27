@@ -19,8 +19,7 @@ function makeBankQuery({
     findByCustomerId,
     findById,
     getBank,
-    remove,
-    //replace,
+    deleteByCustomerId,
     update
   });
 
@@ -121,11 +120,11 @@ function makeBankQuery({
   }
 
   async function findById({
-    bankId
+    id
   }) {
     const db = await database;
     const found = await db.collection('Bank').findOne({
-      _id: db.makeId(bankId)
+      _id: db.makeId(id)
     });
 
     if (found) {
@@ -157,20 +156,18 @@ function makeBankQuery({
     return (await db.collection('Bank').find(query).toArray()).map(documentToBank);
   }
 
-  async function remove({
-    bankId,
-    ...bank
+  async function deleteByCustomerId({
+    customer_id
   }) {
     const db = await database;
-
-    if (bankId) {
-      bank._id = db.makeId(bankId);
-    }
-
     const {
       result
-    } = await db.collection('Bank').deleteMany(bank);
-    return result.n;
+    } = await db.collection('Bank').deleteMany({
+      "customer_id": customer_id
+    });
+    return {
+      success: result.n
+    };
   }
 
   function documentToBank({

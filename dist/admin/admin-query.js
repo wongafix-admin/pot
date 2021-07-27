@@ -27,7 +27,7 @@ function makeAdminQuery({
     findByEmail,
     auth,
     reset,
-    remove
+    deleteById
   });
 
   async function getAdmin({
@@ -55,7 +55,6 @@ function makeAdminQuery({
     adminId,
     ...admin
   }) {
-    console.log("Admin called");
     const db = await database;
 
     if (adminId) {
@@ -177,11 +176,11 @@ function makeAdminQuery({
   }
 
   async function findById({
-    adminId
+    id
   }) {
     const db = await database;
     const found = await db.collection('Admin').findOne({
-      id: adminId
+      _id: db.makeId(id)
     });
 
     if (found) {
@@ -194,6 +193,7 @@ function makeAdminQuery({
   async function findByEmail({
     email
   }) {
+    console.log("admin query called");
     const db = await database;
     const found = await db.collection('Admin').findOne({
       email: email
@@ -206,21 +206,28 @@ function makeAdminQuery({
 
     return null;
   }
+  /*async function remove ({ adminId, ...admin }) {
+    const db = await database
+    if (adminId) {
+        admin._id = db.makeId(adminId)
+    }
+     const { result } = await db.collection('Admin').deleteMany(admin)
+    return result.n
+  }*/
 
-  async function remove({
-    adminId,
-    ...admin
+
+  async function deleteById({
+    id
   }) {
     const db = await database;
-
-    if (adminId) {
-      admin._id = db.makeId(adminId);
-    }
-
     const {
       result
-    } = await db.collection('Admin').deleteMany(admin);
-    return result.n;
+    } = await db.collection('Admin').deleteMany({
+      "_id": db.makeId(id)
+    });
+    return {
+      success: result.n
+    };
   }
 
   function documentToAdmin({

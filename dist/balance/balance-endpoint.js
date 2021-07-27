@@ -169,20 +169,28 @@ function makeBalanceEndpointHandler({
   }
 
   async function deleteBalance(httpRequest) {
-    console.log("Delete endpoint called");
+    //const { customer_id } = httpRequest.pathParams || {}
     const {
-      id
-    } = httpRequest.pathParams || {};
-    await balanceQuery.deleteById({
-      id
-    });
-    return {
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      statusCode: 200,
-      data: JSON.stringify(result)
-    };
+      customer_id
+    } = httpRequest.queryParams || {};
+
+    try {
+      const result = await balanceQuery.deleteByCustomerId({
+        customer_id
+      });
+      return {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        statusCode: 200,
+        data: JSON.stringify(result)
+      };
+    } catch (e) {
+      return (0, _httpError.default)({
+        errorMessage: e.message,
+        statusCode: e instanceof _errors.UniqueConstraintError ? 409 : e instanceof _errors.InvalidPropertyError || e instanceof _errors.RequiredParameterError ? 400 : 500
+      });
+    }
   }
 }
 //# sourceMappingURL=balance-endpoint.js.map

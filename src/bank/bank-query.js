@@ -7,8 +7,7 @@ export default function makeBankQuery({database}){
         findByCustomerId,
         findById,
         getBank,
-        remove,
-        //replace,
+        deleteByCustomerId,
         update
     });
 
@@ -97,11 +96,11 @@ export default function makeBankQuery({database}){
         
     }
 
-  async function findById ({ bankId }) {
+  async function findById ({ id }) {
     const db = await database
     const found = await db
       .collection('Bank')
-      .findOne({ _id: db.makeId(bankId) })
+      .findOne({ _id: db.makeId(id) })
     if (found) {
       return documentToBank(found)
     }
@@ -131,14 +130,13 @@ export default function makeBankQuery({database}){
   }
   
 
-  async function remove ({ bankId, ...bank }) {
+  async function deleteByCustomerId ({ customer_id }) {
     const db = await database
-    if (bankId) {
-        bank._id = db.makeId(bankId)
-    }
 
-    const { result } = await db.collection('Bank').deleteMany(bank)
-    return result.n
+    const { result } = await db.collection('Bank').deleteMany({"customer_id": customer_id})
+    return {
+      success: result.n
+    }
   }
 
   function documentToBank ({ _id: id, ...doc }) {

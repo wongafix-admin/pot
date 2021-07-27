@@ -23,7 +23,7 @@ function makeSubscribersQuery({
     findByPhone,
     findByCustomerId,
     getSubscribers,
-    remove,
+    deleteByCustomerId,
     update
   });
 
@@ -184,11 +184,11 @@ function makeSubscribersQuery({
   }
 
   async function findById({
-    subscribersId
+    id
   }) {
     const db = await database;
     const found = await db.collection('Subscribers').findOne({
-      _id: subscribersId
+      _id: id
     });
 
     if (found) {
@@ -223,28 +223,33 @@ function makeSubscribersQuery({
     });
 
     if (found) {
-      console.log("found");
-      console.log(found);
       return documentToSubscribers(found);
     }
 
     return null;
   }
+  /*async function remove ({ subscribersId, ...subscribers}) {
+    const db = await database
+    if (subscribersId) {
+        subscribers._id = db.makeId(subscribersId)
+    }
+     const { result } = await db.collection('Subscribers').deleteMany(subscribers)
+    return result.n
+  }*/
 
-  async function remove({
-    subscribersId,
-    ...subscribers
+
+  async function deleteByCustomerId({
+    customer_id
   }) {
     const db = await database;
-
-    if (subscribersId) {
-      subscribers._id = db.makeId(subscribersId);
-    }
-
     const {
       result
-    } = await db.collection('Subscribers').deleteMany(subscribers);
-    return result.n;
+    } = await db.collection('Subscribers').deleteMany({
+      "customer_id": customer_id
+    });
+    return {
+      success: result.n
+    };
   }
 
   function documentToSubscribers({

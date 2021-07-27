@@ -18,6 +18,9 @@ export default function makeTransactionEndpointHandler({transactionQuery}){
             case 'PUT':
                 return updateTransaction(httpRequest)
       
+            case 'DELETE':
+              return deleteTransaction(httpRequest)
+
             default:
               return makeHttpError({
                 statusCode: 405,
@@ -163,5 +166,66 @@ export default function makeTransactionEndpointHandler({transactionQuery}){
           })
         }
     }
+
+    async function deleteTransaction (httpRequest) {
+      const { id } = httpRequest.queryParams || {}
+      const { customer_id } = httpRequest.queryParams || {}
+  
+     // const { customer_id } = httpRequest.pathParams || {}
+  
+      if (customer_id !== undefined ){
+        try {
+          const result = await transactionQuery.deleteByCustomerId({ customer_id })
+  
+          return {
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            statusCode: 200,
+            data: JSON.stringify(result)
+          }
+        }
+        catch (e){
+          return makeHttpError({
+            errorMessage: e.message,
+            statusCode:
+              e instanceof UniqueConstraintError
+                ? 409
+                : e instanceof InvalidPropertyError ||
+                  e instanceof RequiredParameterError
+                  ? 400
+                  : 500
+          })
+  
+        }
+      }
+      else {
+        try {
+          const result = await transactionQuery.deleteById({ id })
+          return {
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            statusCode: 200,
+            data: JSON.stringify(result)
+          }
+        }
+        catch (e){
+          return makeHttpError({
+            errorMessage: e.message,
+            statusCode:
+              e instanceof UniqueConstraintError
+                ? 409
+                : e instanceof InvalidPropertyError ||
+                  e instanceof RequiredParameterError
+                  ? 400
+                  : 500
+          })
+  
+        }
+      }
+      
+    }
+  
 
 }

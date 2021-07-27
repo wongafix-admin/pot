@@ -27,6 +27,9 @@ function makeSubscribersEndpointHandler({
       case 'PUT':
         return updateSubscribers(httpRequest);
 
+      case 'DELETE':
+        return deleteSubscriber(httpRequest);
+
       default:
         return (0, _httpError.default)({
           statusCode: 405,
@@ -65,7 +68,6 @@ function makeSubscribersEndpointHandler({
         data: JSON.stringify(result)
       };
     } else if (customer_id !== undefined) {
-      console.log("idcustomer id called: " + customer_id);
       const result = await subscribersQuery.findByCustomerId({
         customer_id
       });
@@ -77,7 +79,6 @@ function makeSubscribersEndpointHandler({
         data: JSON.stringify(result)
       };
     } else if (id !== undefined) {
-      console.log("Id called: " + id);
       const result = await subscribersQuery.findById({
         id
       });
@@ -197,6 +198,31 @@ function makeSubscribersEndpointHandler({
           'Content-Type': 'application/json'
         },
         statusCode: 201,
+        data: JSON.stringify(result)
+      };
+    } catch (e) {
+      return (0, _httpError.default)({
+        errorMessage: e.message,
+        statusCode: e instanceof _errors.UniqueConstraintError ? 409 : e instanceof _errors.InvalidPropertyError || e instanceof _errors.RequiredParameterError ? 400 : 500
+      });
+    }
+  }
+
+  async function deleteSubscriber(httpRequest) {
+    //const { customer_id } = httpRequest.pathParams || {}
+    const {
+      customer_id
+    } = httpRequest.queryParams || {};
+
+    try {
+      const result = await subscribersQuery.deleteByCustomerId({
+        customer_id
+      });
+      return {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        statusCode: 200,
         data: JSON.stringify(result)
       };
     } catch (e) {

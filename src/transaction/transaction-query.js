@@ -7,7 +7,8 @@ export default function makeTransactionQuery({database}){
         findById,
         findByCustomerId,
         getTransactions,
-        remove,
+        deleteByCustomerId,
+        deleteById,
         update
     });
 
@@ -101,11 +102,11 @@ export default function makeTransactionQuery({database}){
   }
 
     
-  async function findById ({ transactionId }) {
+  async function findById ({ id }) {
     const db = await database
     const found = await db
       .collection('Transaction')
-      .findOne({ _id: db.makeId(transactionId) })
+      .findOne({ _id: db.makeId(id) })
     if (found) {
       return documentToTransaction(found)
     }
@@ -121,14 +122,29 @@ export default function makeTransactionQuery({database}){
       .toArray()).map(documentToTransaction)
   }
 
-  async function remove ({ transactionId, ...transaction }) {
+  async function deleteByCustomerId ({ customer_id }) {
     const db = await database
-    if (transactionId) {
-        transaction._id = db.makeId(transactionId)
-    }
 
-    const { result } = await db.collection('Transaction').deleteMany(transaction)
-    return result.n
+    const { result } = await db.collection('Transaction').deleteMany({"customer_id": customer_id})
+    return {
+      success: result.n
+    }
+  }
+
+  async function deleteById ({ id }) {
+    const db = await database
+
+    const { result } = await db.collection('Transaction').deleteOne({"_id": db.makeId(id)})
+    if (result.deletedCount > 0){
+      return {
+        status: "Success"
+      }
+    }
+    else {
+      return {
+        status: "Error"
+      }
+    }
   }
 
   function documentToTransaction ({ _id: id, ...doc }) {

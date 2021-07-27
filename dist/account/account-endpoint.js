@@ -168,9 +168,10 @@ function makeAccountEndpointHandler({
   }
 
   async function deleteAccount(httpRequest) {
+    //const { customer_id } = httpRequest.pathParams || {}
     const {
       customer_id
-    } = httpRequest.pathParams || {};
+    } = httpRequest.queryParams || {};
 
     try {
       const result = await accountQuery.deleteByCustomerId({

@@ -19,7 +19,8 @@ function makeDealQuery({
     findByCustomerId,
     findById,
     getDeals,
-    remove,
+    deleteByCustomerId,
+    deleteById,
     update
   });
 
@@ -134,11 +135,11 @@ function makeDealQuery({
   }
 
   async function findById({
-    dealId
+    id
   }) {
     const db = await database;
     const found = await db.collection('Deal').findOne({
-      _id: db.makeId(dealId)
+      _id: db.makeId(id)
     });
 
     if (found) {
@@ -157,20 +158,40 @@ function makeDealQuery({
     }).toArray()).map(documentToDeal);
   }
 
-  async function remove({
-    dealId,
-    ...deal
+  async function deleteByCustomerId({
+    customer_id
   }) {
     const db = await database;
-
-    if (dealId) {
-      deal._id = db.makeId(dealId);
-    }
-
     const {
       result
-    } = await db.collection('Deal').deleteMany(deal);
-    return result.n;
+    } = await db.collection('Deal').deleteMany({
+      "customer_id": customer_id
+    });
+    return {
+      success: result.n
+    };
+  }
+
+  async function deleteById({
+    id
+  }) {
+    const db = await database;
+    const {
+      result
+    } = await db.collection('Deal').deleteOne({
+      "_id": db.makeId(id)
+    });
+    console.log(result);
+
+    if (result.deletedCount > 0) {
+      return {
+        status: "Success"
+      };
+    } else {
+      return {
+        status: "Error"
+      };
+    }
   }
 
   function documentToDeal({

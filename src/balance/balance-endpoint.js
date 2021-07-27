@@ -166,16 +166,31 @@ export default function makeBalanceEndpointHandler({balanceQuery}){
 
 
   async function deleteBalance (httpRequest) {
-    console.log("Delete endpoint called");
-    const { id } = httpRequest.pathParams || {}
-    await balanceQuery.deleteById({ id })
+    //const { customer_id } = httpRequest.pathParams || {}
+    const { customer_id } = httpRequest.queryParams || {}
+    try {
+      const result = await balanceQuery.deleteByCustomerId({ customer_id })
 
-    return {
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      statusCode: 200,
-      data: JSON.stringify(result)
+      return {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        statusCode: 200,
+        data: JSON.stringify(result)
+      }
+    }
+    catch (e){
+      return makeHttpError({
+        errorMessage: e.message,
+        statusCode:
+          e instanceof UniqueConstraintError
+            ? 409
+            : e instanceof InvalidPropertyError ||
+              e instanceof RequiredParameterError
+              ? 400
+              : 500
+      })
+
     }
   }
 

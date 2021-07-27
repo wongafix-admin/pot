@@ -19,9 +19,8 @@ function makeBalanceQuery({
     findByCustomerId,
     findById,
     getBalance,
-    remove,
-    deleteById,
-    //replace,
+    //remove,
+    deleteByCustomerId,
     update
   });
 
@@ -126,11 +125,11 @@ function makeBalanceQuery({
   }
 
   async function findById({
-    balanceId
+    id
   }) {
     const db = await database;
     const found = await db.collection('Balance').findOne({
-      _id: db.makeId(balanceId)
+      _id: db.makeId(id)
     });
 
     if (found) {
@@ -162,45 +161,18 @@ function makeBalanceQuery({
     return (await db.collection('Balance').find(query).toArray()).map(documentToBalance);
   }
 
-  async function remove({
-    balanceId,
-    ...balance
+  async function deleteByCustomerId({
+    customer_id
   }) {
     const db = await database;
-
-    if (balanceId) {
-      balance._id = db.makeId(balanceId);
-    }
-
-    const {
-      result
-    } = await db.collection('Balance').deleteMany(balance);
-    return result.n;
-  }
-
-  async function deleteById({
-    id
-  }) {
-    console.log("Balance query id " + id);
-    const db = await database;
-    id = db.makeId(id);
     const {
       result
     } = await db.collection('Balance').deleteMany({
-      _id: id
-    }); //return result.n
-
-    if (result) {
-      return {
-        status: "success",
-        message: "Deleted successfully"
-      };
-    } else {
-      return {
-        status: "error",
-        message: "Deleted error"
-      };
-    }
+      "customer_id": customer_id
+    });
+    return {
+      success: result.n
+    };
   }
 
   function documentToBalance({

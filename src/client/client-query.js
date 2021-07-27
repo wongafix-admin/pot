@@ -7,7 +7,7 @@ export default function makeClientQuery({database}){
         findByCustomerId,
         findById,
         getClients,
-        remove,
+        deleteByCustomerId,
         update
     });
 
@@ -52,12 +52,11 @@ export default function makeClientQuery({database}){
         }
     } 
 
-    async function findById ({ clientId }) {
-      console.log(("Find by id called"));
+    async function findById ({ id }) {
       const db = await database
       const found = await db
         .collection('Client')
-        .findOne({ _id: db.makeId(clientId) })
+        .findOne({ _id: db.makeId(id) })
       if (found) {
         return documentToClient(found)
       }
@@ -111,18 +110,10 @@ export default function makeClientQuery({database}){
           oripass: client.oripass,
           status: client.status,
           date:  client.date
-
-          /*guarantor_name: client.guarantor_name,
-          guarantor_home_address: client.guarantor_home_address,
-          guarantor_office_address:client.guarantor_office_address,
-          guarantor_phone: client.guarantor_phone,*/
-
           
         } 
       }
-      /*if (id) {
-        _id = db.makeId(id)
-      }*/
+     
       const { result } = await db
         .collection('Client')
         .updateOne(query, newSet, {upsert:true})
@@ -142,15 +133,15 @@ export default function makeClientQuery({database}){
         }
       
   }
-    async function remove ({ clientId, ...client }) {
-        const db = await database
-        if (clientId) {
-            client._id = db.makeId(clientId)
-        }
+  
+  async function deleteByCustomerId ({ customer_id }) {
+    const db = await database
 
-        const { result } = await db.collection('Client').deleteMany(client)
-        return result.n
+    const { result } = await db.collection('Client').deleteMany({"customer_id": customer_id})
+    return {
+      success: result.n
     }
+  }
 
     function documentToClient ({ _id: id, ...doc }) {
         return makeClient({ id, ...doc })

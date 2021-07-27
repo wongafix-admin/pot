@@ -19,7 +19,7 @@ function makeClientQuery({
     findByCustomerId,
     findById,
     getClients,
-    remove,
+    deleteByCustomerId,
     update
   });
 
@@ -74,12 +74,11 @@ function makeClientQuery({
   }
 
   async function findById({
-    clientId
+    id
   }) {
-    console.log("Find by id called");
     const db = await database;
     const found = await db.collection('Client').findOne({
-      _id: db.makeId(clientId)
+      _id: db.makeId(id)
     });
 
     if (found) {
@@ -137,17 +136,8 @@ function makeClientQuery({
         oripass: client.oripass,
         status: client.status,
         date: client.date
-        /*guarantor_name: client.guarantor_name,
-        guarantor_home_address: client.guarantor_home_address,
-        guarantor_office_address:client.guarantor_office_address,
-        guarantor_phone: client.guarantor_phone,*/
-
       }
     };
-    /*if (id) {
-      _id = db.makeId(id)
-    }*/
-
     const {
       result
     } = await db.collection('Client').updateOne(query, newSet, {
@@ -167,20 +157,18 @@ function makeClientQuery({
     }
   }
 
-  async function remove({
-    clientId,
-    ...client
+  async function deleteByCustomerId({
+    customer_id
   }) {
     const db = await database;
-
-    if (clientId) {
-      client._id = db.makeId(clientId);
-    }
-
     const {
       result
-    } = await db.collection('Client').deleteMany(client);
-    return result.n;
+    } = await db.collection('Client').deleteMany({
+      "customer_id": customer_id
+    });
+    return {
+      success: result.n
+    };
   }
 
   function documentToClient({

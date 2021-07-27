@@ -6,7 +6,7 @@ import upperFirst from '../helpers/upper-first';
 export default function makeAdmin(
     adminInfo = requiredParam('adminInfo')
 ){
-    
+  console.log("admin nmakeAdmin");
     const validAdmin = validate(adminInfo);
     const normalAdmin= normalize(validAdmin);
     return Object.freeze(normalAdmin);
@@ -33,7 +33,8 @@ export default function makeAdmin(
         }
       }
 
-      function normalize ({...otherInfo }) {
+      function normalize ({...otherInfo }) { 
+        
         return {
           ...otherInfo
         }

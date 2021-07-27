@@ -18,6 +18,10 @@ export default function makeDealEndpointHandler({dealQuery}){
             case 'PUT':
               return updateDeal(httpRequest)
       
+            case 'DELETE':
+              return deleteDeal(httpRequest)
+
+
             default:
               return makeHttpError({
                 statusCode: 405,
@@ -160,6 +164,67 @@ export default function makeDealEndpointHandler({dealQuery}){
               : 500
       })
     }
+  }
+
+  async function deleteDeal (httpRequest) {
+    const { id } = httpRequest.queryParams || {}
+    const { customer_id } = httpRequest.queryParams || {}
+
+   // const { customer_id } = httpRequest.pathParams || {}
+
+    if (customer_id !== undefined ){
+      try {
+        const result = await dealQuery.deleteByCustomerId({ customer_id })
+
+        return {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          statusCode: 200,
+          data: JSON.stringify(result)
+        }
+      }
+      catch (e){
+        return makeHttpError({
+          errorMessage: e.message,
+          statusCode:
+            e instanceof UniqueConstraintError
+              ? 409
+              : e instanceof InvalidPropertyError ||
+                e instanceof RequiredParameterError
+                ? 400
+                : 500
+        })
+
+      }
+    }
+    else {
+     
+      try {
+        const result = await dealQuery.deleteById({ id })
+        return {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          statusCode: 200,
+          data: JSON.stringify(result)
+        }
+      }
+      catch (e){
+        return makeHttpError({
+          errorMessage: e.message,
+          statusCode:
+            e instanceof UniqueConstraintError
+              ? 409
+              : e instanceof InvalidPropertyError ||
+                e instanceof RequiredParameterError
+                ? 400
+                : 500
+        })
+
+      }
+    }
+    
   }
 
 }

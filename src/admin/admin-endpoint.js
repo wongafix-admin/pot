@@ -15,6 +15,9 @@ export default function makeAdminEndpointHandler({adminQuery}){
             case 'GET':
               return getAdmin(httpRequest)
           
+            case 'DELETE':
+              return deleteAdmin(httpRequest)
+
             default:
               return makeHttpError({
                 statusCode: 405,
@@ -30,6 +33,7 @@ export default function makeAdminEndpointHandler({adminQuery}){
       const { max, before, after } = httpRequest.queryParams || {}
 
       if (email !== undefined){
+        console.log("admin called");
         const result = await adminQuery.findByEmail({ email })
 
         return {
@@ -139,6 +143,36 @@ export default function makeAdminEndpointHandler({adminQuery}){
                   : 500
           })
         }
+    }
+
+    async function deleteAdmin (httpRequest) {
+      //const { customer_id } = httpRequest.pathParams || {}
+      const { id } = httpRequest.queryParams || {}
+      try {
+        const result = await adminQuery.deleteById({ id })
+  
+        return {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          statusCode: 200,
+          data: JSON.stringify(result)
+        }
+      }
+      catch (e){
+        return makeHttpError({
+          errorMessage: e.message,
+          statusCode:
+            e instanceof UniqueConstraintError
+              ? 409
+              : e instanceof InvalidPropertyError ||
+                e instanceof RequiredParameterError
+                ? 400
+                : 500
+        })
+  
+      }
+      
     }
 
 }

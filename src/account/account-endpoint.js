@@ -165,7 +165,9 @@ export default function makeAccountEndpointHandler({accountQuery}){
   }
 
   async function deleteAccount (httpRequest) {
-    const { customer_id } = httpRequest.pathParams || {}
+    //const { customer_id } = httpRequest.pathParams || {}
+    const { customer_id } = httpRequest.queryParams || {}
+    
     try {
       const result = await accountQuery.deleteByCustomerId({ customer_id })
 

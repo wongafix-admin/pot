@@ -122,11 +122,11 @@ function makeAccountQuery({
   }
 
   async function findById({
-    accountId
+    id
   }) {
     const db = await database;
     const found = await db.collection('Account').findOne({
-      _id: db.makeId(accountId)
+      _id: db.makeId(id)
     });
 
     if (found) {

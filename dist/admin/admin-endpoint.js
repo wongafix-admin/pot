@@ -24,6 +24,9 @@ function makeAdminEndpointHandler({
       case 'GET':
         return getAdmin(httpRequest);
 
+      case 'DELETE':
+        return deleteAdmin(httpRequest);
+
       default:
         return (0, _httpError.default)({
           statusCode: 405,
@@ -46,6 +49,7 @@ function makeAdminEndpointHandler({
     } = httpRequest.queryParams || {};
 
     if (email !== undefined) {
+      console.log("admin called");
       const result = await adminQuery.findByEmail({
         email
       });
@@ -128,7 +132,6 @@ function makeAdminEndpointHandler({
           data: JSON.stringify(result)
         };
       } else {
-        console.log("Admin cendpoint alled");
         const admin = (0, _admin.default)(adminInfo);
         const result = await adminQuery.add(admin);
         return {
@@ -139,6 +142,31 @@ function makeAdminEndpointHandler({
           data: JSON.stringify(result)
         };
       }
+    } catch (e) {
+      return (0, _httpError.default)({
+        errorMessage: e.message,
+        statusCode: e instanceof _errors.UniqueConstraintError ? 409 : e instanceof _errors.InvalidPropertyError || e instanceof _errors.RequiredParameterError ? 400 : 500
+      });
+    }
+  }
+
+  async function deleteAdmin(httpRequest) {
+    //const { customer_id } = httpRequest.pathParams || {}
+    const {
+      id
+    } = httpRequest.queryParams || {};
+
+    try {
+      const result = await adminQuery.deleteById({
+        id
+      });
+      return {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        statusCode: 200,
+        data: JSON.stringify(result)
+      };
     } catch (e) {
       return (0, _httpError.default)({
         errorMessage: e.message,

@@ -24,6 +24,7 @@ export default function makeDeal(
       
 
       function normalize ({ surname, othernames, ...otherInfo }) {
+        console.log("deal normalize");
         return {
           ...otherInfo,
           surname: upperFirst(surname),
