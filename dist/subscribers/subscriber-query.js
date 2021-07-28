@@ -188,7 +188,7 @@ function makeSubscribersQuery({
   }) {
     const db = await database;
     const found = await db.collection('Subscribers').findOne({
-      _id: id
+      _id: db.makeId(id)
     });
 
     if (found) {
@@ -245,7 +245,7 @@ function makeSubscribersQuery({
     const {
       result
     } = await db.collection('Subscribers').deleteMany({
-      "customer_id": customer_id
+      "okra_customer_id": customer_id
     });
     return {
       success: result.n

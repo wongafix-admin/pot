@@ -174,7 +174,7 @@ export default function makeSubscribersQuery ({database}){
         const db = await database
         const found = await db
           .collection('Subscribers')
-          .findOne({ _id: id })
+          .findOne({ _id: db.makeId(id) })
         if (found) {
           return documentToSubscribers(found)
         }
@@ -217,7 +217,7 @@ export default function makeSubscribersQuery ({database}){
     async function deleteByCustomerId ({ customer_id }) {
       const db = await database
   
-      const { result } = await db.collection('Subscribers').deleteMany({"customer_id": customer_id})
+      const { result } = await db.collection('Subscribers').deleteMany({"okra_customer_id": customer_id})
       return {
         success: result.n
       }
