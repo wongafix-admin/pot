@@ -39,6 +39,9 @@ export default function okraCrons () {
           for (const account of accounts){
             //okra check balance
             // data to be sent to the POST request
+            const nAccount = {
+              account_id: account.account_id
+            }
             
             const balance = await fetch('https://api.okra.ng/v2/balance/refresh', {
                                     method: 'POST',
@@ -47,7 +50,7 @@ export default function okraCrons () {
                                       Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDc2ZWU3Mjc4ZGUwZjExZDVkMWJlMGIiLCJpYXQiOjE2MTg0MDcwMjd9.Q-R0qocVPKnCZHtpGigsTtoN-MVlUIhZ9LsSrW7VCsM',
                                       'Content-Type': 'application/json'
                                     },
-                                    body: JSON.stringify({account_id: account.account_id})
+                                    body: JSON.stringify(nAccount)
                                   })
 
             const balRes = await balance.json();

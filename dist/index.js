@@ -22,6 +22,8 @@ var _bank = _interopRequireDefault(require("./bank"));
 
 var _mailer = _interopRequireDefault(require("./mailer"));
 
+var _cronjob = _interopRequireDefault(require("./cronjob"));
+
 var _adaptRequest = _interopRequireDefault(require("./helpers/adapt-request"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -42,6 +44,19 @@ app.post('/sendmail', sendmailController);
 function sendmailController(req, res) {
   const httpRequest = (0, _adaptRequest.default)(req);
   (0, _mailer.default)(httpRequest).then(({
+    headers,
+    statusCode,
+    data
+  }) => res.set(headers).status(statusCode).send(data)).catch(e => res.status(500).end());
+}
+
+app.get('/cronjob/:id', cronjobController);
+app.get('/cronjob/find/?start=:now', cronjobController);
+app.get('/cronjob/find/?end=:now', cronjobController);
+
+function cronjobController(req, res) {
+  const httpRequest = (0, _adaptRequest.default)(req);
+  (0, _cronjob.default)(httpRequest).then(({
     headers,
     statusCode,
     data

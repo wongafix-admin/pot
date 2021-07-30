@@ -28,4 +28,4 @@ export default function makeSubscribersEndpointHandler({subscribersQuery}){
 
 };*/
 "use strict";
-//# sourceMappingURL=index.js.map
+//# sourceMappingURL=indexn.js.map

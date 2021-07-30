@@ -11,6 +11,7 @@ import handleSubscribersRequest from './subscribers'
 import handleBankRequest from './bank'
 
 import handleSendmailRequest from './mailer'
+import handleCronjobRequest from './cronjob'
 
 
 import adaptRequest from './helpers/adapt-request'
@@ -19,7 +20,7 @@ var cors = require('cors')
 const app = express();
 app.use(bodyParser.json());
 
-const port = 9090;
+const port = process.env.PORT || 9090;
 
 //Middleware
 app.use(express.urlencoded({ extended: true}));
@@ -39,6 +40,22 @@ function sendmailController (req, res) {
           .send(data)
       )
       .catch(e => res.status(500).end())
+}
+
+app.get('/cronjob/:id', cronjobController);
+app.get('/cronjob/find/?start=:now', cronjobController);
+app.get('/cronjob/find/?end=:now', cronjobController);
+
+function cronjobController (req, res) {
+    const httpRequest = adaptRequest(req)
+    handleCronjobRequest(httpRequest)
+        .then(({ headers, statusCode, data }) =>
+        res
+            .set(headers)
+            .status(statusCode) 
+            .send(data)
+        )
+        .catch(e => res.status(500).end())
 }
 
 
@@ -207,4 +224,4 @@ function balanceController (req, res) {
 
 
 
-app.listen(process.env.PORT, () => console.log(`Listening on port 9090`+process.env.PORT || 9090));
+app.listen(port, () => console.log(`Listening on port 9090`+process.env.PORT || 9090));
