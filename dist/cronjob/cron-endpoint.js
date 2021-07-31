@@ -111,7 +111,6 @@ function makeCronEndpointHandler({
       condition
     }); //return deals;
 
-    console.log(deals);
     var counter = 0;
 
     for (const deal of deals) {
@@ -176,8 +175,6 @@ function makeCronEndpointHandler({
       }
 
       if (deals.length == counter) {
-        console.log(deals.length);
-        console.log(counter);
         return {
           statusCode: 200,
           status: "success"
@@ -186,11 +183,9 @@ function makeCronEndpointHandler({
     }
 
     if (deals.length == 0) {
-      console.log(deals.length);
-      console.log(counter);
       return {
         statusCode: 200,
-        status: "success"
+        status: "no deal"
       };
     }
   }
