@@ -9,7 +9,8 @@ var _httpError = _interopRequireDefault(require("../helpers/http-error"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const nodemailer = require('nodemailer');
+//const nodemailer = require('nodemailer');
+const sgMail = require('@sendgrid/mail');
 
 function makeQuery() {
   return async function handle(httpRequest) {
@@ -52,14 +53,16 @@ function makeQuery() {
           });
         }
       }
-
+      /*
       const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
+          service: 'gmail',
+          auth: {
           user: 'wongafixmail@gmail.com',
-          pass: '!321Wongafix_Admin'
-        }
-      });
+          pass: '!321Wongafix_Admin',
+          },
+      });*/
+
+
       const template = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
             <html xmlns="http://www.w3.org/1999/xhtml" lang="en-GB">
             <head>
@@ -129,26 +132,39 @@ function makeQuery() {
                 </table>
             </body>
             </html>`;
-      transporter.sendMail({
-        from: '"Wongafix" <wongafixmail@gmail.com>',
-        // sender address
+      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+      const msg = {
         to: msgInfo.email,
-        // list of receivers
+        // Change to your recipient
+        from: {
+          email: 'info@wongafix.com',
+          name: 'Wongafix'
+        },
         subject: msgInfo.topic,
-        // Subject line
         text: msgInfo.message,
         // plain text body
         html: template // html body
 
-      }, function (error, info) {
-        if (error) {
-          console.log("error is " + error);
-          resolve(false); // or use rejcet(false) but then you will have to handle errors
-        } else {
-          console.log('Email sent: ' + info.response);
-          resolve(true);
-        }
+      };
+      sgMail.send(msg).then(() => {
+        resolve(true);
+      }).catch(error => {
+        resolve(false);
       });
+      /* transporter.sendMail({
+           from: '"Wongafix" <wongafixmail@gmail.com>', // sender address
+           to: msgInfo.email, // list of receivers
+           subject: msgInfo.topic, // Subject line
+           text: msgInfo.message, // plain text body
+           html: template, // html body
+           }, function(error, info){
+               if (error) {
+               resolve(false); // or use rejcet(false) but then you will have to handle errors
+               } 
+           else {
+               resolve(true);
+               }
+           });*/
     });
   }
 }

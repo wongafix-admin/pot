@@ -1,6 +1,8 @@
 import makeHttpError from '../helpers/http-error';
 
-const nodemailer = require('nodemailer');
+//const nodemailer = require('nodemailer');
+
+const sgMail = require('@sendgrid/mail')
 
 export default function makeQuery () {
 
@@ -52,13 +54,16 @@ export default function makeQuery () {
                 }
             }
     
+            
+
+            /*
             const transporter = nodemailer.createTransport({
                 service: 'gmail',
                 auth: {
                 user: 'wongafixmail@gmail.com',
                 pass: '!321Wongafix_Admin',
                 },
-            });
+            });*/
             
 
             const template = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -131,9 +136,28 @@ export default function makeQuery () {
             </body>
             </html>`;
 
+            sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+            const msg = {
+            to: msgInfo.email, // Change to your recipient
+            from: {
+                email: 'info@wongafix.com',
+                name: 'Wongafix'
+            },
             
+            subject: msgInfo.topic,
+            text: msgInfo.message, // plain text body
+            html: template, // html body
+            }
+            sgMail
+            .send(msg)
+            .then(() => {
+                resolve(true);
+            })
+            .catch((error) => {
+                resolve(false);
+            })
 
-            transporter.sendMail({
+           /* transporter.sendMail({
                 from: '"Wongafix" <wongafixmail@gmail.com>', // sender address
                 to: msgInfo.email, // list of receivers
                 subject: msgInfo.topic, // Subject line
@@ -146,7 +170,7 @@ export default function makeQuery () {
                 else {
                     resolve(true);
                     }
-                });
+                });*/
         })
     }
  
