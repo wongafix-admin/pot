@@ -25,6 +25,7 @@
     "node-schedule": "^2.0.0",
     "nodemailer": "^6.6.3",
     "okra-js": "^1.0.6",
+    "serve": "^12.0.0",
     "smslive247api": "^2.0.0"
   },
   "devDependencies": {
