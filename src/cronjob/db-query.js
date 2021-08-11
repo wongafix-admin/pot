@@ -91,6 +91,7 @@ export default function makeDbQuery({database}){
             email: deals.email,
             loan_amount: deals.loan_amount,
             loan_monthly_payable: deals.loan_monthly_payable,
+            loan_duration: deals.loan_duration,
             loan_due_date: deals.loan_due_date,
             last_month_paid: deals.last_month_paid,
             last_year_paid: deals.last_year_paid,

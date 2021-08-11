@@ -18,6 +18,8 @@ var _balance = _interopRequireDefault(require("./balance"));
 
 var _subscribers = _interopRequireDefault(require("./subscribers"));
 
+var _uploads = _interopRequireDefault(require("./uploads"));
+
 var _bank = _interopRequireDefault(require("./bank"));
 
 var _mailer = _interopRequireDefault(require("./mailer"));
@@ -90,6 +92,22 @@ app.get('/subscriber/find/?customer_id=:id', subscribersController);
 function subscribersController(req, res) {
   const httpRequest = (0, _adaptRequest.default)(req);
   (0, _subscribers.default)(httpRequest).then(({
+    headers,
+    statusCode,
+    data
+  }) => res.set(headers).status(statusCode).send(data)).catch(e => res.status(500).end());
+}
+
+app.all('/uploads', uploadsController);
+app.post('/uploads/add', uploadsController);
+app.get('/uploads/:id', uploadsController);
+app.get('/uploads/find/?id=:id', uploadsController);
+app.get('/uploads/find/?name=:name', uploadsController);
+app.get('/uploads/find/?subscriber_id=:id', uploadsController);
+
+function uploadsController(req, res) {
+  const httpRequest = (0, _adaptRequest.default)(req);
+  (0, _uploads.default)(httpRequest).then(({
     headers,
     statusCode,
     data

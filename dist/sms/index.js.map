@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../src/sms/index.js"],"names":["queryHandler"],"mappings":";;;;;;;AAAA;;;;AAEA,MAAMA,YAAY,GAAG,qBAArB;eAEeA,Y","sourcesContent":["import makeQuery from './query';\n\nconst queryHandler = makeQuery();\n\nexport default queryHandler;"],"file":"index.js"}

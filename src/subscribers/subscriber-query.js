@@ -143,6 +143,7 @@ export default function makeSubscribersQuery ({database}){
             upload_id_card:  subscribers.upload_id_card, 
             upload_picture:  subscribers.upload_picture, 
             reg_status:  subscribers.reg_status, 
+            offer_letter:  subscribers.offer_letter, 
             date:  subscribers.date
           } 
         }

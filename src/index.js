@@ -8,6 +8,7 @@ import handleTransactionRequest from './transaction'
 import handleAccountRequest from './account'
 import handleBalanceRequest from './balance'
 import handleSubscribersRequest from './subscribers'
+import handleUploadsRequest from './uploads'
 import handleBankRequest from './bank'
 
 import handleSendmailRequest from './mailer'
@@ -92,6 +93,28 @@ function subscribersController (req, res) {
   
   const httpRequest = adaptRequest(req)
   handleSubscribersRequest(httpRequest)
+    .then(({ headers, statusCode, data }) =>
+      res
+        .set(headers)
+        .status(statusCode) 
+        .send(data)
+    )
+    .catch(e => res.status(500).end())
+}
+
+
+app.all('/uploads', uploadsController);
+app.post('/uploads/add', uploadsController);
+app.get('/uploads/:id', uploadsController);
+app.get('/uploads/find/?id=:id', uploadsController);
+app.get('/uploads/find/?name=:name', uploadsController);
+app.get('/uploads/find/?subscriber_id=:id', uploadsController);
+
+
+function uploadsController (req, res) {
+  
+  const httpRequest = adaptRequest(req)
+  handleUploadsRequest(httpRequest)
     .then(({ headers, statusCode, data }) =>
       res
         .set(headers)
