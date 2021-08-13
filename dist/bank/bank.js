@@ -20,29 +20,9 @@ function makeBank(bankInfo = (0, _requiredParam.default)('bankInfo')) {
   const normalBank = normalize(validBank);
   return Object.freeze(normalBank);
 
-  function validate({
-    email = (0, _requiredParam.default)('email'),
-    phone = (0, _requiredParam.default)('phone'),
-    bank = (0, _requiredParam.default)('bank'),
-    account_id = (0, _requiredParam.default)('account_id'),
-    account_name = (0, _requiredParam.default)('account_name'),
-    account_nuban = (0, _requiredParam.default)('account_nuban'),
-    account_type = (0, _requiredParam.default)('account_type'),
-    account_connected = (0, _requiredParam.default)('account_connected'),
-    ...otherInfo
+  function validate({ ...otherInfo
   } = {}) {
-    validateName('account_name', account_name);
-    validateName('bank', bank);
-    return {
-      email,
-      phone,
-      bank,
-      account_id,
-      account_name,
-      account_nuban,
-      account_type,
-      account_connected,
-      ...otherInfo
+    return { ...otherInfo
     };
   }
 

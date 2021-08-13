@@ -168,8 +168,10 @@ export default function makeBankEndpointHandler({bankQuery}){
   async function deleteBank (httpRequest) {
     //const { customer_id } = httpRequest.pathParams || {}
     const { customer_id } = httpRequest.queryParams || {}
+    const { name } = httpRequest.queryParams || {}
+
     try {
-      const result = await bankQuery.deleteByCustomerId({ customer_id })
+      const result = await bankQuery.deleteByCustomerId({ customer_id, name })
 
       return {
         headers: {

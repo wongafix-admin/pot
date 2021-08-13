@@ -12,19 +12,19 @@ export default function makeAccount(
     return Object.freeze(normalAccount);
 
     function validate ({
-        email = requiredParam('email'),
-        phone = requiredParam('phone'),
-        bank = requiredParam('bank'),
-        account_id = requiredParam('account_id'),
-        account_name = requiredParam('account_name'),
-        account_nuban = requiredParam('account_nuban'),
-        account_type = requiredParam('account_type'),
-        account_connected = requiredParam('account_connected'),
+        // email = requiredParam('email'),
+        // phone = requiredParam('phone'),
+        // bank = requiredParam('bank'),
+        // account_id = requiredParam('account_id'),
+        // account_name = requiredParam('account_name'),
+        // account_nuban = requiredParam('account_nuban'),
+        // account_type = requiredParam('account_type'),
+        // account_connected = requiredParam('account_connected'),
         ...otherInfo
       } = {}) {
-        validateName('account_name', account_name)
-        validateName('bank', bank)
-        return {email, phone, bank, account_id, account_name, account_nuban, account_type, account_connected,  ...otherInfo }
+        //validateName('account_name', account_name)
+        //validateName('bank', bank)
+        return {...otherInfo }
       }
     
     function validateName (label, name) {
@@ -35,11 +35,11 @@ export default function makeAccount(
       }
     }
 
-    function normalize ({ account_name, bank, ...otherInfo }) {
+    function normalize ({ ...otherInfo }) {
       return {
         ...otherInfo,
-        account_name: upperFirst(account_name),
-        bank: upperFirst(bank)
+        // account_name: upperFirst(account_name),
+        // bank: upperFirst(bank)
       }
     }
 }

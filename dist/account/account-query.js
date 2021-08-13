@@ -50,6 +50,7 @@ function makeAccountQuery({
     accountId,
     ...account
   }) {
+    console.log("endpoint query add");
     const db = await database;
 
     if (accountId) {
@@ -156,13 +157,15 @@ function makeAccountQuery({
 
 
   async function deleteByCustomerId({
-    customer_id
+    customer_id,
+    bank
   }) {
     const db = await database;
     const {
       result
     } = await db.collection('Account').deleteMany({
-      "customer_id": customer_id
+      "customer_id": customer_id,
+      "bank": bank
     });
     return {
       success: result.n

@@ -91,6 +91,7 @@ function makeAccountEndpointHandler({
 
   async function postAccount(httpRequest) {
     let accountInfo = httpRequest.body;
+    console.log(accountInfo);
 
     if (!accountInfo) {
       return (0, _httpError.default)({
@@ -172,10 +173,15 @@ function makeAccountEndpointHandler({
     const {
       customer_id
     } = httpRequest.queryParams || {};
+    const {
+      bank
+    } = httpRequest.queryParams || {};
+    console.log(bank);
 
     try {
       const result = await accountQuery.deleteByCustomerId({
-        customer_id
+        customer_id,
+        bank
       });
       return {
         headers: {

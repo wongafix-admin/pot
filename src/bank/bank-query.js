@@ -130,10 +130,10 @@ export default function makeBankQuery({database}){
   }
   
 
-  async function deleteByCustomerId ({ customer_id }) {
+  async function deleteByCustomerId ({ customer_id, name }) {
     const db = await database
 
-    const { result } = await db.collection('Bank').deleteMany({"customer_id": customer_id})
+    const { result } = await db.collection('Bank').deleteMany({"customer_id": customer_id, "name": name})
     return {
       success: result.n
     }

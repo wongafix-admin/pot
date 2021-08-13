@@ -70,7 +70,7 @@ function makeDealQuery({
     });
     return {
       success: result.ok === 1,
-      created: documentToDeal(ops[0])
+      id: documentToDeal(result.insertedId)
     };
   }
 

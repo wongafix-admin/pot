@@ -172,10 +172,14 @@ function makeBankEndpointHandler({
     const {
       customer_id
     } = httpRequest.queryParams || {};
+    const {
+      name
+    } = httpRequest.queryParams || {};
 
     try {
       const result = await bankQuery.deleteByCustomerId({
-        customer_id
+        customer_id,
+        name
       });
       return {
         headers: {

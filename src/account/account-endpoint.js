@@ -76,6 +76,7 @@ export default function makeAccountEndpointHandler({accountQuery}){
 
     async function postAccount (httpRequest) {
         let accountInfo = httpRequest.body
+        console.log(accountInfo);
         if (!accountInfo) {
           return makeHttpError({
             statusCode: 400,
@@ -167,9 +168,11 @@ export default function makeAccountEndpointHandler({accountQuery}){
   async function deleteAccount (httpRequest) {
     //const { customer_id } = httpRequest.pathParams || {}
     const { customer_id } = httpRequest.queryParams || {}
+    const { bank } = httpRequest.queryParams || {}
     
+    console.log(bank);
     try {
-      const result = await accountQuery.deleteByCustomerId({ customer_id })
+      const result = await accountQuery.deleteByCustomerId({ customer_id, bank })
 
       return {
         headers: {

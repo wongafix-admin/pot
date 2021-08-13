@@ -20,29 +20,19 @@ function makeAccount(accountInfo = (0, _requiredParam.default)('accountInfo')) {
   const normalAccount = normalize(validAccount);
   return Object.freeze(normalAccount);
 
-  function validate({
-    email = (0, _requiredParam.default)('email'),
-    phone = (0, _requiredParam.default)('phone'),
-    bank = (0, _requiredParam.default)('bank'),
-    account_id = (0, _requiredParam.default)('account_id'),
-    account_name = (0, _requiredParam.default)('account_name'),
-    account_nuban = (0, _requiredParam.default)('account_nuban'),
-    account_type = (0, _requiredParam.default)('account_type'),
-    account_connected = (0, _requiredParam.default)('account_connected'),
+  function validate({ // email = requiredParam('email'),
+    // phone = requiredParam('phone'),
+    // bank = requiredParam('bank'),
+    // account_id = requiredParam('account_id'),
+    // account_name = requiredParam('account_name'),
+    // account_nuban = requiredParam('account_nuban'),
+    // account_type = requiredParam('account_type'),
+    // account_connected = requiredParam('account_connected'),
     ...otherInfo
   } = {}) {
-    validateName('account_name', account_name);
-    validateName('bank', bank);
-    return {
-      email,
-      phone,
-      bank,
-      account_id,
-      account_name,
-      account_nuban,
-      account_type,
-      account_connected,
-      ...otherInfo
+    //validateName('account_name', account_name)
+    //validateName('bank', bank)
+    return { ...otherInfo
     };
   }
 
@@ -52,14 +42,11 @@ function makeAccount(accountInfo = (0, _requiredParam.default)('accountInfo')) {
     }
   }
 
-  function normalize({
-    account_name,
-    bank,
-    ...otherInfo
+  function normalize({ ...otherInfo
   }) {
-    return { ...otherInfo,
-      account_name: (0, _upperFirst.default)(account_name),
-      bank: (0, _upperFirst.default)(bank)
+    return { ...otherInfo // account_name: upperFirst(account_name),
+      // bank: upperFirst(bank)
+
     };
   }
 }

@@ -31,6 +31,7 @@ export default function makeAccountQuery({database}){
 
     
     async function add ({ accountId, ...account }) {
+        console.log("endpoint query add")
         const db = await database
         if (accountId) {
           account._id = db.makeId(accountId)
@@ -132,10 +133,10 @@ export default function makeAccountQuery({database}){
     return result.n
   }*/
 
-  async function deleteByCustomerId ({ customer_id }) {
+  async function deleteByCustomerId ({ customer_id, bank }) {
     const db = await database
 
-    const { result } = await db.collection('Account').deleteMany({"customer_id": customer_id})
+    const { result } = await db.collection('Account').deleteMany({"customer_id": customer_id, "bank": bank})
     return {
       success: result.n
     }
