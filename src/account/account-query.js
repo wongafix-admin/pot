@@ -113,6 +113,8 @@ export default function makeAccountQuery({database}){
   
 
   async function findByCustomerId ({ customer_id } = {}) {
+
+    console.log(customer_id);
     const db = await database;
     const query = { customer_id: customer_id }
 

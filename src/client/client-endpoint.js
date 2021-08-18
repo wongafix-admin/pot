@@ -76,6 +76,7 @@ export default function makeClientEndpointHandler({clientQuery}){
 
     async function postClient (httpRequest) {
         let clientInfo = httpRequest.body
+        console.log(clientInfo);
         if (!clientInfo) {
           return makeHttpError({
             statusCode: 400,

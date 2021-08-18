@@ -12,16 +12,12 @@ export default function makeClient(
     return Object.freeze(normalClient);
 
     function validate ({
-        surname = requiredParam('surname'),
-        othernames = requiredParam('othernames'),
-        office = requiredParam('office'),
-        guarantor_name = requiredParam('guarantor_name'),
+        
         ...otherInfo
       } = {}) {
-        //validateName('surname', surname)
-        //validateName('othernames', othernames)
+        
         console.log("Validated!");
-        return { surname, othernames, office, guarantor_name, ...otherInfo }
+        return {...otherInfo }
       }
     
       /*function validateName (label, name) {

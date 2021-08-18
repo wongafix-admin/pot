@@ -21,22 +21,10 @@ function makeClient(clientInfo = (0, _requiredParam.default)('clientInfo')) {
   const normalClient = normalize(validClient);
   return Object.freeze(normalClient);
 
-  function validate({
-    surname = (0, _requiredParam.default)('surname'),
-    othernames = (0, _requiredParam.default)('othernames'),
-    office = (0, _requiredParam.default)('office'),
-    guarantor_name = (0, _requiredParam.default)('guarantor_name'),
-    ...otherInfo
+  function validate({ ...otherInfo
   } = {}) {
-    //validateName('surname', surname)
-    //validateName('othernames', othernames)
     console.log("Validated!");
-    return {
-      surname,
-      othernames,
-      office,
-      guarantor_name,
-      ...otherInfo
+    return { ...otherInfo
     };
   }
   /*function validateName (label, name) {

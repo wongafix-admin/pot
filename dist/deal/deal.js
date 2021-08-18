@@ -16,33 +16,26 @@ var _upperFirst = _interopRequireDefault(require("../helpers/upper-first"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function makeDeal(dealInfo = (0, _requiredParam.default)('dealInfo')) {
+  console.log("makedeal called");
   const validDeal = validate(dealInfo);
   const normalDeal = normalize(validDeal);
   return Object.freeze(normalDeal);
 
-  function validate({
-    customer_id = (0, _requiredParam.default)('customer_id'),
-    status = (0, _requiredParam.default)('status'),
+  function validate({ // customer_id = requiredParam('customer_id'),
+    // status = requiredParam('status'),
     ...otherInfo
   } = {}) {
     //validateName('surname', surname)
     //validateName('othernames', othernames)
-    return {
-      customer_id,
-      status,
-      ...otherInfo
+    console.log("validate deal called");
+    return { ...otherInfo
     };
   }
 
-  function normalize({
-    surname,
-    othernames,
-    ...otherInfo
+  function normalize({ ...otherInfo
   }) {
     console.log("deal normalize");
-    return { ...otherInfo,
-      surname: (0, _upperFirst.default)(surname),
-      othernames: (0, _upperFirst.default)(othernames)
+    return { ...otherInfo
     };
   }
 }

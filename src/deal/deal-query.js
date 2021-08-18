@@ -34,27 +34,47 @@ export default function makeDealQuery({database}){
         if (dealId) {
           deal._id = db.makeId(dealId)
         }
-        const { result, ops } = await db
-          .collection('Deal')
+
+        return db.collection("Deal")
           .insertOne(deal)
-          .catch(mongoError => {
-            const [errorCode] = mongoError.message.split(' ')
-            if (errorCode === 'E11000') {
-              const [_, mongoIndex] = mongoError.message.split(':')[2].split(' ')
-              throw new UniqueConstraintError(
-                mongoIndex === 'ContactEmailIndex' ? 'emailAddress' : 'contactId'
-              )
-            }
-            throw mongoError
-          })
-        return {
-            success: result.ok === 1,
-            id: documentToDeal(result.insertedId)
-        }
+          .then(result => {
+            console.log(result.insertedId);
+            return {
+              success: result.ok === 1,
+              id: result.insertedId
+              }
+        }).catch(mongoError => {
+          const [errorCode] = mongoError.message.split(' ')
+              if (errorCode === 'E11000') {
+                const [_, mongoIndex] = mongoError.message.split(':')[2].split(' ')
+                throw new UniqueConstraintError(
+                  mongoIndex === 'ContactEmailIndex' ? 'emailAddress' : 'contactId'
+                )
+              }
+              throw mongoError
+        });
+
+
+        // const { result, ops } = await db
+        //   .collection('Deal')
+        //   .insertOne(deal)
+        //   .catch(mongoError => {
+        //     const [errorCode] = mongoError.message.split(' ')
+        //     if (errorCode === 'E11000') {
+        //       const [_, mongoIndex] = mongoError.message.split(':')[2].split(' ')
+        //       throw new UniqueConstraintError(
+        //         mongoIndex === 'ContactEmailIndex' ? 'emailAddress' : 'contactId'
+        //       )
+        //     }
+        //     throw mongoError
+        //   })
+        // return {
+        //     success: result.insertedId,//result.ok === 1,
+        //     id: result.insertedId
+        // }
     }
 
     async function update ({ id, ...deals }) {
-      
         const db = await database
         const query = {
           _id: db.makeId(id)
@@ -69,6 +89,7 @@ export default function makeDealQuery({database}){
             phone: deals.phone,
             email: deals.email,
             loan_amount: deals.loan_amount,
+            loan_duration: deals.loan_duration,
             loan_monthly_payable: deals.loan_monthly_payable,
             loan_due_date: deals.loan_due_date,
             last_month_paid: deals.last_month_paid,
@@ -93,6 +114,9 @@ export default function makeDealQuery({database}){
             pay_status: deals.pay_status,
             status: deals.status,
             date: deals.date
+
+
+            
           } 
         }
         /*if (id) {

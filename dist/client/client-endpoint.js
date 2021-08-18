@@ -91,6 +91,7 @@ function makeClientEndpointHandler({
 
   async function postClient(httpRequest) {
     let clientInfo = httpRequest.body;
+    console.log(clientInfo);
 
     if (!clientInfo) {
       return (0, _httpError.default)({

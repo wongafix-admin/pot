@@ -123,8 +123,9 @@ export default function makeDealEndpointHandler({dealQuery}){
 
   async function updateDeal (httpRequest) {
     
-    let dealsInfo = httpRequest.body
-    if (!dealsInfo) {
+    let dealInfo = httpRequest.body
+    
+    if (!dealInfo) {
       return makeHttpError({
         statusCode: 400,
         errorMessage: 'Bad request. No POST body.'
@@ -133,7 +134,7 @@ export default function makeDealEndpointHandler({dealQuery}){
 
     if (typeof httpRequest.body === 'string') {
       try {
-        dealsInfo = JSON.parse(dealsInfo)
+        dealInfo = JSON.parse(dealInfo)
       } catch {
         return makeHttpError({
           statusCode: 400,
@@ -143,7 +144,8 @@ export default function makeDealEndpointHandler({dealQuery}){
     }
 
     try {
-      const deals = makeDeals(dealsInfo);
+      const deals = makeDeal(dealInfo);
+      console.log(deals);
       const result = await dealQuery.update(deals)
       return {
         headers: {

@@ -6,29 +6,28 @@ import upperFirst from '../helpers/upper-first';
 export default function makeDeal(
     dealInfo = requiredParam('dealInfo')
 ){
-    
+  console.log("makedeal called");
     const validDeal = validate(dealInfo);
     const normalDeal= normalize(validDeal);
     return Object.freeze(normalDeal);
 
     function validate ({
-        customer_id = requiredParam('customer_id'),
-        status = requiredParam('status'),
+        // customer_id = requiredParam('customer_id'),
+        // status = requiredParam('status'),
         ...otherInfo
       } = {}) {
         //validateName('surname', surname)
         //validateName('othernames', othernames)
-        return {customer_id, status,  ...otherInfo }
+        console.log("validate deal called");
+        return {...otherInfo }
       }
     
       
 
-      function normalize ({ surname, othernames, ...otherInfo }) {
+      function normalize ({ ...otherInfo }) {
         console.log("deal normalize");
         return {
-          ...otherInfo,
-          surname: upperFirst(surname),
-          othernames: upperFirst(othernames)
+          ...otherInfo
         }
       }
 }
