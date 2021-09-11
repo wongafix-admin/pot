@@ -3,29 +3,29 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = makeAdminEndpointHandler;
+exports.default = makeContactEndpointHandler;
 
 var _errors = require("../helpers/errors");
 
 var _httpError = _interopRequireDefault(require("../helpers/http-error"));
 
-var _admin = _interopRequireDefault(require("./admin"));
+var _contact = _interopRequireDefault(require("./contact"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function makeAdminEndpointHandler({
-  adminQuery
+function makeContactEndpointHandler({
+  contactQuery
 }) {
   return async function handle(httpRequest) {
     switch (httpRequest.method) {
       case 'POST':
-        return postAdmin(httpRequest);
+        return postContact(httpRequest);
 
       case 'GET':
-        return getAdmin(httpRequest);
+        return getContact(httpRequest);
 
       case 'DELETE':
-        return deleteAdmin(httpRequest);
+        return deleteContact(httpRequest);
 
       default:
         return (0, _httpError.default)({
@@ -35,12 +35,9 @@ function makeAdminEndpointHandler({
     }
   };
 
-  async function getAdmin(httpRequest) {
+  async function getContact(httpRequest) {
     const {
       id
-    } = httpRequest.queryParams || {};
-    const {
-      email
     } = httpRequest.queryParams || {};
     const {
       max,
@@ -48,19 +45,8 @@ function makeAdminEndpointHandler({
       after
     } = httpRequest.queryParams || {};
 
-    if (email !== undefined) {
-      const result = await adminQuery.findByEmail({
-        email
-      });
-      return {
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        statusCode: 200,
-        data: JSON.stringify(result)
-      };
-    } else if (id !== undefined) {
-      const result = await adminQuery.findById({
+    if (id !== undefined) {
+      const result = await contactQuery.findById({
         id
       });
       return {
@@ -71,7 +57,7 @@ function makeAdminEndpointHandler({
         data: JSON.stringify(result)
       };
     } else {
-      const result = await adminQuery.getAdmin({
+      const result = await contactQuery.getContact({
         max,
         before,
         after
@@ -86,10 +72,10 @@ function makeAdminEndpointHandler({
     }
   }
 
-  async function postAdmin(httpRequest) {
-    let adminInfo = httpRequest.body;
+  async function postContact(httpRequest) {
+    let contactInfo = httpRequest.body;
 
-    if (!adminInfo) {
+    if (!contactInfo) {
       return (0, _httpError.default)({
         statusCode: 400,
         errorMessage: 'Bad request. No POST body.'
@@ -98,7 +84,7 @@ function makeAdminEndpointHandler({
 
     if (typeof httpRequest.body === 'string') {
       try {
-        adminInfo = JSON.parse(adminInfo);
+        contactInfo = JSON.parse(contactInfo);
       } catch {
         return (0, _httpError.default)({
           statusCode: 400,
@@ -108,38 +94,16 @@ function makeAdminEndpointHandler({
     }
 
     try {
-      if (httpRequest.path == '/admin/auth') {
-        const admin = (0, _admin.default)(adminInfo);
-        const result = await adminQuery.auth(admin);
-        return {
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          statusCode: 201,
-          data: JSON.stringify(result)
-        };
-      } else if (httpRequest.path == '/admin/reset') {
-        const admin = (0, _admin.default)(adminInfo);
-        const result = await adminQuery.reset(admin);
-        console.log(JSON.stringify(result));
-        return {
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          statusCode: 201,
-          data: JSON.stringify(result)
-        };
-      } else {
-        const admin = (0, _admin.default)(adminInfo);
-        const result = await adminQuery.add(admin);
-        return {
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          statusCode: 201,
-          data: JSON.stringify(result)
-        };
-      }
+      const contact = (0, _contact.default)(contactInfo);
+      const result = await contactQuery.add(contact);
+      console.log("result returned");
+      return {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        statusCode: 201,
+        data: JSON.stringify(result)
+      };
     } catch (e) {
       return (0, _httpError.default)({
         errorMessage: e.message,
@@ -148,14 +112,14 @@ function makeAdminEndpointHandler({
     }
   }
 
-  async function deleteAdmin(httpRequest) {
+  async function deleteContact(httpRequest) {
     //const { customer_id } = httpRequest.pathParams || {}
     const {
       id
     } = httpRequest.queryParams || {};
 
     try {
-      const result = await adminQuery.deleteById({
+      const result = await contactQuery.deleteById({
         id
       });
       return {
@@ -173,4 +137,4 @@ function makeAdminEndpointHandler({
     }
   }
 }
-//# sourceMappingURL=admin-endpoint.js.map
+//# sourceMappingURL=contact-endpoint.js.map

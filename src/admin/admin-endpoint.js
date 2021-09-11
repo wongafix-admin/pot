@@ -33,7 +33,6 @@ export default function makeAdminEndpointHandler({adminQuery}){
       const { max, before, after } = httpRequest.queryParams || {}
 
       if (email !== undefined){
-        console.log("admin called");
         const result = await adminQuery.findByEmail({ email })
 
         return {
@@ -97,7 +96,6 @@ export default function makeAdminEndpointHandler({adminQuery}){
           if (httpRequest.path == '/admin/auth'){
             const admin = makeAdmin(adminInfo);
             const result = await adminQuery.auth(admin);
-            console.log(JSON.stringify(result))
             return {
                 headers: {
                   'Content-Type': 'application/json'

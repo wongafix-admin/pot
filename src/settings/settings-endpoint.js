@@ -4,22 +4,22 @@ import {
     RequiredParameterError
   } from '../helpers/errors';
   import makeHttpError from '../helpers/http-error';
-  import makeAccount from './account';
+  import makeSettings from './settings';
 
-export default function makeAccountEndpointHandler({accountQuery}){
+export default function makeASettingsEndpointHandler({settingsQuery}){
     return async function handle(httpRequest){
         switch (httpRequest.method) {
             case 'POST':
-              return postAccount(httpRequest)
+              return postSettings(httpRequest)
       
             case 'GET':
-              return getAccount(httpRequest)
+              return getSettings(httpRequest)
 
             case 'PUT':
-              return updateAccount(httpRequest)
+              return updateSettings(httpRequest)
 
             case 'DELETE':
-              return deleteAccount(httpRequest)
+              return deleteSettings(httpRequest)
       
             default:
               return makeHttpError({
@@ -29,25 +29,12 @@ export default function makeAccountEndpointHandler({accountQuery}){
         }
     }
 
-    async function getAccount (httpRequest) {
+    async function getSettings (httpRequest) {
       const { id } = httpRequest.queryParams || {}
-      const { customer_id } = httpRequest.queryParams || {}
       const { max, before, after } = httpRequest.queryParams || {}
 
-      if (customer_id !== undefined ){
-        const result = await accountQuery.findByCustomerId({ customer_id })
-
-        return {
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          statusCode: 200,
-          data: JSON.stringify(result)
-        }
-
-      }
-      else if (id !== undefined ){
-        const result = await accountQuery.findById({ id })
+     if (id !== undefined ){
+        const result = await settingsQuery.findById({ id })
 
         return {
           headers: {
@@ -59,7 +46,7 @@ export default function makeAccountEndpointHandler({accountQuery}){
 
       }
       else {
-        const result = await accountQuery.getAccount({ max, before, after })
+        const result = await settingsQuery.getSettings({ max, before, after })
 
         return {
           headers: {
@@ -74,10 +61,9 @@ export default function makeAccountEndpointHandler({accountQuery}){
     }
     
 
-    async function postAccount (httpRequest) {
-        let accountInfo = httpRequest.body
-        console.log(accountInfo);
-        if (!accountInfo) {
+    async function postSettings (httpRequest) {
+        let settingsInfo = httpRequest.body
+        if (!settingsInfo) {
           return makeHttpError({
             statusCode: 400,
             errorMessage: 'Bad request. No POST body.'
@@ -86,7 +72,7 @@ export default function makeAccountEndpointHandler({accountQuery}){
     
         if (typeof httpRequest.body === 'string') {
           try {
-            accountInfo = JSON.parse(accountInfo)
+            settingsInfo = JSON.parse(settingsInfo)
           } catch {
             return makeHttpError({
               statusCode: 400,
@@ -96,8 +82,8 @@ export default function makeAccountEndpointHandler({accountQuery}){
         }
     
         try {
-          const account = makeAccount(accountInfo)
-          const result = await accountQuery.add(account)
+          const settings = makeSettings(settingsInfo)
+          const result = await settingsQuery.add(settings)
           return {
             headers: {
               'Content-Type': 'application/json'
@@ -120,10 +106,10 @@ export default function makeAccountEndpointHandler({accountQuery}){
     }
 
 
-  async function updateAccount (httpRequest) {
+  async function updateSettings (httpRequest) {
     
-    let accountInfo = httpRequest.body
-    if (!accountInfo) {
+    let settingsInfo = httpRequest.body
+    if (!settingsInfo) {
       return makeHttpError({
         statusCode: 400,
         errorMessage: 'Bad request. No POST body.'
@@ -132,7 +118,7 @@ export default function makeAccountEndpointHandler({accountQuery}){
 
     if (typeof httpRequest.body === 'string') {
       try {
-        accountInfo = JSON.parse(accountInfo)
+        settingsInfo = JSON.parse(settingsInfo)
       } catch {
         return makeHttpError({
           statusCode: 400,
@@ -142,8 +128,8 @@ export default function makeAccountEndpointHandler({accountQuery}){
     }
 
     try {
-      const account = makeAccount(accountInfo);
-      const result = await accountQuery.update(account)
+      const settings = makeSettings(settingsInfo);
+      const result = await settingsQuery.update(settings)
       return {
         headers: {
           'Content-Type': 'application/json'
@@ -165,65 +151,35 @@ export default function makeAccountEndpointHandler({accountQuery}){
     }
   }
 
-  async function deleteAccount (httpRequest) {
+  async function deleteSettings (httpRequest) {
     //const { customer_id } = httpRequest.pathParams || {}
-    const { customer_id } = httpRequest.queryParams || {}
-    const { bank } = httpRequest.queryParams || {}
+    const { id } = httpRequest.queryParams || {}
     
-    if(bank){
+    try {
+      const result = await settingsQuery.deleteById({ _id, id })
 
-      try {
-        const result = await accountQuery.deleteByBank({ customer_id, bank })
-  
-        return {
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          statusCode: 200,
-          data: JSON.stringify(result)
-        }
+      return {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        statusCode: 200,
+        data: JSON.stringify(result)
       }
-      catch (e){
-        return makeHttpError({
-          errorMessage: e.message,
-          statusCode:
-            e instanceof UniqueConstraintError
-              ? 409
-              : e instanceof InvalidPropertyError ||
-                e instanceof RequiredParameterError
-                ? 400
-                : 500
-        })
-  
-      }
-    }else {
-
-      try {
-        const result = await accountQuery.deleteByCustomerId({ customer_id })
-  
-        return {
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          statusCode: 200,
-          data: JSON.stringify(result)
-        }
-      }
-      catch (e){
-        return makeHttpError({
-          errorMessage: e.message,
-          statusCode:
-            e instanceof UniqueConstraintError
-              ? 409
-              : e instanceof InvalidPropertyError ||
-                e instanceof RequiredParameterError
-                ? 400
-                : 500
-        })
-  
-      }
+    }
+    catch (e){
+      return makeHttpError({
+        errorMessage: e.message,
+        statusCode:
+          e instanceof UniqueConstraintError
+            ? 409
+            : e instanceof InvalidPropertyError ||
+              e instanceof RequiredParameterError
+              ? 400
+              : 500
+      })
 
     }
+    
   }
 
 

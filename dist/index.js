@@ -26,6 +26,10 @@ var _mailer = _interopRequireDefault(require("./mailer"));
 
 var _cronjob = _interopRequireDefault(require("./cronjob"));
 
+var _settings = _interopRequireDefault(require("./settings"));
+
+var _contact = _interopRequireDefault(require("./contact"));
+
 var _adaptRequest = _interopRequireDefault(require("./helpers/adapt-request"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -201,6 +205,34 @@ app.get('/balance/find/?customer_id=:id', balanceController);
 function balanceController(req, res) {
   const httpRequest = (0, _adaptRequest.default)(req);
   (0, _balance.default)(httpRequest).then(({
+    headers,
+    statusCode,
+    data
+  }) => res.set(headers).status(statusCode).send(data)).catch(e => res.status(500).end());
+}
+
+app.all('/settings', settingsController);
+app.post('/settings/add', settingsController);
+app.get('/settings/:id', settingsController);
+app.get('/settings/find/?id=:id', settingsController);
+
+function settingsController(req, res) {
+  const httpRequest = (0, _adaptRequest.default)(req);
+  (0, _settings.default)(httpRequest).then(({
+    headers,
+    statusCode,
+    data
+  }) => res.set(headers).status(statusCode).send(data)).catch(e => res.status(500).end());
+}
+
+app.all('/contact', contactController);
+app.post('/contact/add', contactController);
+app.get('/contact/:id', contactController);
+app.get('/contact/find/?id=:id', contactController);
+
+function contactController(req, res) {
+  const httpRequest = (0, _adaptRequest.default)(req);
+  (0, _contact.default)(httpRequest).then(({
     headers,
     statusCode,
     data

@@ -7,6 +7,7 @@ export default function makeAccountQuery({database}){
         findByCustomerId,
         findById,
         deleteByCustomerId,
+        deleteByBank,
         getAccount,
         //remove,
         //replace,
@@ -135,10 +136,30 @@ export default function makeAccountQuery({database}){
     return result.n
   }*/
 
-  async function deleteByCustomerId ({ customer_id, bank }) {
+  async function deleteById ({ id, bank }) { 
+    const db = await database
+
+    const { result } = await db.collection('Account').deleteMany({"_id": db.makeId(id), "bank": bank})
+    return {
+      success: result.n
+    }
+    
+  }
+
+  async function deleteByBank ({ customer_id, bank }) {
     const db = await database
 
     const { result } = await db.collection('Account').deleteMany({"customer_id": customer_id, "bank": bank})
+    return {
+      success: result.n
+    }
+    
+  }
+
+  async function deleteByCustomerId ({ customer_id}) {
+    const db = await database
+
+    const { result } = await db.collection('Account').deleteMany({"customer_id": customer_id})
     return {
       success: result.n
     }

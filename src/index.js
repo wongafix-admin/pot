@@ -13,6 +13,9 @@ import handleBankRequest from './bank'
 
 import handleSendmailRequest from './mailer'
 import handleCronjobRequest from './cronjob'
+import handleSettingsRequest from './settings'
+
+import handleContactRequest from './contact'
 
 
 import adaptRequest from './helpers/adapt-request'
@@ -236,6 +239,45 @@ function balanceController (req, res) {
   
   const httpRequest = adaptRequest(req)
   handleBalanceRequest(httpRequest)
+    .then(({ headers, statusCode, data }) =>
+      res
+        .set(headers)
+        .status(statusCode) 
+        .send(data)
+    )
+    .catch(e => res.status(500).end())
+}
+
+
+app.all('/settings', settingsController);
+app.post('/settings/add', settingsController);
+app.get('/settings/:id', settingsController);
+app.get('/settings/find/?id=:id', settingsController);
+
+
+function settingsController (req, res) {
+  
+  const httpRequest = adaptRequest(req)
+  handleSettingsRequest(httpRequest)
+    .then(({ headers, statusCode, data }) =>
+      res
+        .set(headers)
+        .status(statusCode) 
+        .send(data)
+    )
+    .catch(e => res.status(500).end())
+}
+
+app.all('/contact', contactController);
+app.post('/contact/add', contactController);
+app.get('/contact/:id', contactController);
+app.get('/contact/find/?id=:id', contactController);
+
+
+function contactController (req, res) {
+  
+  const httpRequest = adaptRequest(req)
+  handleContactRequest(httpRequest)
     .then(({ headers, statusCode, data }) =>
       res
         .set(headers)

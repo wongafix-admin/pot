@@ -157,6 +157,22 @@ function makeAccountQuery({
   }*/
 
 
+  async function deleteById({
+    id,
+    bank
+  }) {
+    const db = await database;
+    const {
+      result
+    } = await db.collection('Account').deleteMany({
+      "_id": db.makeId(id),
+      "bank": bank
+    });
+    return {
+      success: result.n
+    };
+  }
+
   async function deleteByCustomerId({
     customer_id,
     bank

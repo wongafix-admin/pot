@@ -72,7 +72,7 @@ function makeQuery() {
             
                 <style type="text/css">
                     @media screen {
-                    @font-face {
+                    @font-face { 
                         font-family: 'Lato';
                         font-style: normal;
                         font-weight: 400;

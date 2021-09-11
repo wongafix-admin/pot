@@ -145,7 +145,6 @@ export default function makeDealEndpointHandler({dealQuery}){
 
     try {
       const deals = makeDeal(dealInfo);
-      console.log(deals);
       const result = await dealQuery.update(deals)
       return {
         headers: {
