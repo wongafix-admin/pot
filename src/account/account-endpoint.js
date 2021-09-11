@@ -171,7 +171,6 @@ export default function makeAccountEndpointHandler({accountQuery}){
     const { bank } = httpRequest.queryParams || {}
     
     if(bank){
-
       try {
         const result = await accountQuery.deleteByBank({ customer_id, bank })
   

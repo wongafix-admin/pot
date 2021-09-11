@@ -163,7 +163,6 @@ export default function makeAccountQuery({database}){
     return {
       success: result.n
     }
-    
   }
 
 
